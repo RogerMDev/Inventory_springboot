@@ -1,0 +1,44 @@
+services:
+
+  frontend:
+    build:
+      context: ./frontend  # o el path correcto
+    container_name: frontend-app
+    ports:
+      - "8081:80"
+    depends_on:
+      - app  # opcional si quieres que espere al backend
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventario
+      MYSQL_USER: roger
+      MYSQL_PASSWORD: roger123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: inventario-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
+
+
+
+

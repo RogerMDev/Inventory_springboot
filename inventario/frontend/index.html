@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es" id="html" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Inventario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen">
+<div class="container mx-auto p-4">
+    <!-- Encabezado -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <!-- Modo oscuro -->
+        <div class="flex items-center gap-2">
+            <label for="modo-oscuro" class="text-gray-700 dark:text-gray-200 font-medium">🌙 Modo oscuro</label>
+            <input type="checkbox" id="modo-oscuro" class="w-5 h-5">
+        </div>
+
+        <!-- Botón descarga CSV -->
+        <button id="descargar-csv" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            📄 Descargar CSV
+        </button>
+    </div>
+
+    <!-- Título -->
+    <h1 class="text-3xl font-bold mb-6 text-center text-blue-700 dark:text-blue-300">Gestor de Inventario</h1>
+
+    <!-- Formulario -->
+    <form id="formulario-producto" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <input type="text" id="nombre" placeholder="Nombre del producto" class="border border-gray-300 rounded px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <input type="number" id="cantidad" placeholder="Cantidad" class="border border-gray-300 rounded px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <input type="number" step="0.01" id="precio" placeholder="Precio" class="border border-gray-300 rounded px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+        <button id="boton-enviar" type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Añadir Producto
+        </button>
+    </form>
+
+    <!-- Buscador + Ordenar -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+        <input type="text" id="buscador" placeholder="Buscar productos..." class="border px-3 py-2 rounded w-full md:w-1/2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <div class="flex items-center space-x-2">
+            <span class="text-gray-700 dark:text-gray-200 font-medium mb-0">Ordenar por:</span>
+            <button id="boton-nombre" class="bg-gray-300 dark:bg-gray-700 dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600" onclick="ordenarPor('nombre')">Nombre</button>
+            <button id="boton-cantidad" class="bg-gray-300 dark:bg-gray-700 dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600" onclick="ordenarPor('cantidad')">Cantidad</button>
+            <button id="boton-precio" class="bg-gray-300 dark:bg-gray-700 dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600" onclick="ordenarPor('precio')">Precio</button>
+        </div>
+    </div>
+
+    <!-- Lista de productos -->
+    <div id="lista-productos" class="space-y-4 mt-6"></div>
+
+    <!-- Resumen -->
+    <div class="mt-6 p-4 bg-white dark:bg-gray-800 shadow-md rounded" id="resumen-stock">
+        <p class="text-lg font-semibold">Resumen del Inventario:</p>
+        <p id="total-productos">Total de productos: 0</p>
+        <p id="valor-inventario">Valor total del inventario: 0 €</p>
+    </div>
+</div>
+
+<!-- Script de app -->
+<script src="script.js"></script>
+
+<!-- Script modo oscuro -->
+<script>
+    const checkbox = document.getElementById("modo-oscuro");
+    const html = document.getElementById("html");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const modoGuardado = localStorage.getItem("modo-oscuro");
+      if (modoGuardado === "true") {
+        html.classList.add("dark");
+        checkbox.checked = true;
+      } else {
+        html.classList.remove("dark");
+        checkbox.checked = false;
+      }
+    });
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        html.classList.add("dark");
+        localStorage.setItem("modo-oscuro", "true");
+      } else {
+        html.classList.remove("dark");
+        localStorage.setItem("modo-oscuro", "false");
+      }
+    });
+</script>
+
+<!-- Notificación -->
+<div id="notificacion" class="fixed bottom-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg hidden transition-opacity duration-500 z-50"></div>
+
+</body>
+</html>
